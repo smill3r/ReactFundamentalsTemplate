@@ -1,5 +1,28 @@
 .panel {
   display: flex;
-  justify-content: flex-end;
-  margin: 16px 0;
+  justify-content: space-between;
+  margin: 50px 0 16px;
+
+  & span {
+    width: 50%;
+    display: flex;
+    & label {
+      width: 100%;
+    }
+    & button {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.emptyList {
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & button {
+    margin-top: 2vh;
+  }
 }

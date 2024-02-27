@@ -1,6 +1,10 @@
-import React from "react";
-
 import styles from "./styles.module.css";
+import { CourseCard } from "./components";
+import { Button } from "../../common";
+
+import { useState } from "react";
+
+import { SearchBar } from "../SearchBar";
 
 // Module 1:
 // * render list of components using 'CourseCard' component for each course
@@ -31,18 +35,45 @@ import styles from "./styles.module.css";
 //   ** Courses should display amount of CourseCard equal length of courses array.
 //   ** CourseForm should be shown after a click on the "Add new course" button.
 
-export const Courses = ({ coursesList, authorsList, handleShowCourse }) => {
+export const Courses = ({ courses, authorsList, handleShowCourse }) => {
   // write your code here
+
+  const [coursesList, setCourseList] = useState(courses);
 
   // for EmptyCourseList component container use data-testid="emptyContainer" attribute
   // for button in EmptyCourseList component add data-testid="addCourse" attribute
 
   return (
     <>
-      <div className={styles.panel}>
-        // reuse Button component for 'ADD NEW COURSE' button
-      </div>
-      // use '.map' array method to render all courses. Use CourseCard component
+      {coursesList.length > 0 ? (
+        <div className={styles.panel}>
+          <span>
+            <SearchBar
+              coursesList={courses}
+              filterUsers={setCourseList}
+            ></SearchBar>
+          </span>
+          <Button buttonText="ADD NEW"></Button>
+        </div>
+      ) : null}
+      {coursesList.map((course) => (
+        <CourseCard
+          course={course}
+          handleShowCourse={handleShowCourse}
+          authorsList={authorsList}
+        ></CourseCard>
+      ))}
+
+      {coursesList.length == 0 ? (
+        <div className={styles.emptyList}>
+          <h1>Your List Is Empty</h1>
+          <p>Please use 'Add New Course' button to add your first course</p>
+          <Button
+            className={styles.marginButton}
+            buttonText="ADD NEW COURSE"
+          ></Button>
+        </div>
+      ) : null}
     </>
   );
 };
