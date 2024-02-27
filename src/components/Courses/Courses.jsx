@@ -64,7 +64,7 @@ export const Courses = ({ courses, authorsList, handleShowCourse }) => {
         ></CourseCard>
       ))}
 
-      {coursesList.length == 0 ? (
+      {coursesList.length === 0 ? (
         <div className={styles.emptyList}>
           <h1>Your List Is Empty</h1>
           <p>Please use 'Add New Course' button to add your first course</p>

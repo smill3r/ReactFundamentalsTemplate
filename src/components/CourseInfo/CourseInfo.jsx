@@ -70,6 +70,8 @@ export const CourseInfo = ({
                 {authorsList.map((author) => {
                   if (course.authors.includes(author.id)) {
                     return <li>{author.name}</li>;
+                  } else {
+                    return null;
                   }
                 })}
               </ul>

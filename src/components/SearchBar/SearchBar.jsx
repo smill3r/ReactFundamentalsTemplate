@@ -18,7 +18,9 @@ export const SearchBar = ({ filterUsers, coursesList }) => {
         course.id.toLowerCase().includes(term.toLowerCase()) ||
         course.title.toLowerCase().includes(term.toLowerCase())
       ) {
-        return course;
+        return true;
+      } else {
+        return false;
       }
     });
 
