@@ -25,6 +25,7 @@
 import React from "react";
 
 import { formatCreationDate, getCourseDuration } from "../../helpers";
+import { Button } from "../../common";
 
 import styles from "./styles.module.css";
 
@@ -39,36 +40,50 @@ export const CourseInfo = ({
   showCourseId,
 }) => {
   // write your code here
+  const course = coursesList.find((courses) => (courses.id = showCourseId));
 
   return (
-    <div className={styles.container} data-testid="courseInfo">
-      <h1>Course title</h1>
-      <div className={styles.courseInfo}>
-        <p className={styles.description}>Course description</p>
-        <div>
-          <p>
-            <b>ID: </b>
-            id
-          </p>
-          <p>
-            <b>Duration: </b>
-            duration (use getCourseDuration)
-          </p>
-          <p>
-            <b>Created: </b>
-            creation date (use formatCreationDate)
-          </p>
+    <>
+      <div className={styles.container} data-testid="courseInfo">
+        <h1>{course.title}</h1>
+        <div className={styles.courseInfo}>
+          <div className={styles.description}>
+            <h2>Description:</h2>
+            <p>{course.description}</p>
+          </div>
           <div>
-            <b>Authors</b>
-            <ul className={styles.authorsList}>
-              //use '.map' to render authors list with 'li' tag
-            </ul>
+            <p>
+              <b>ID: </b>
+              {showCourseId}
+            </p>
+            <p>
+              <b>Duration: </b>
+              {getCourseDuration(course.duration)}
+            </p>
+            <p>
+              <b>Created: </b>
+              {formatCreationDate(course.creationDate)}
+            </p>
+            <div>
+              <b>Authors</b>
+              <ul className={styles.authorsList}>
+                {authorsList.map((author) => {
+                  if (course.authors.includes(author.id)) {
+                    return <li>{author.name}</li>;
+                  }
+                })}
+              </ul>
+            </div>
           </div>
         </div>
+        {
+          // Module 2: use 'react-router-dom' 'Link' component for button 'Back' and remove 'onBack' prop
+        }
       </div>
-      // Module 1: reuse Button component for 'onBack' functionality // Module
-      2: use 'react-router-dom' 'Link' component for button 'Back' and remove
-      'onBack' prop
-    </div>
+
+      <div className={styles.backButton}>
+        <Button buttonText={"BACK"} handleClick={onBack}></Button>
+      </div>
+    </>
   );
 };
