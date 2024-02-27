@@ -86,7 +86,7 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
 						data-testid="updateCourse" 
 			*/}
           <Button
-            buttonText="SHOW CURSE"
+            buttonText="SHOW COURSE"
             handleClick={() => handleShowCourse(course.id)}
           ></Button>
         </div>

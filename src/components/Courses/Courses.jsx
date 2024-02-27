@@ -35,10 +35,10 @@ import { SearchBar } from "../SearchBar";
 //   ** Courses should display amount of CourseCard equal length of courses array.
 //   ** CourseForm should be shown after a click on the "Add new course" button.
 
-export const Courses = ({ courses, authorsList, handleShowCourse }) => {
+export const Courses = ({ coursesList, authorsList, handleShowCourse }) => {
   // write your code here
 
-  const [coursesList, setCourseList] = useState(courses);
+  const [filteredList, setCourseList] = useState(coursesList);
 
   // for EmptyCourseList component container use data-testid="emptyContainer" attribute
   // for button in EmptyCourseList component add data-testid="addCourse" attribute
@@ -49,20 +49,25 @@ export const Courses = ({ courses, authorsList, handleShowCourse }) => {
         <div className={styles.panel}>
           <span>
             <SearchBar
-              coursesList={courses}
+              coursesList={coursesList}
               filterUsers={setCourseList}
             ></SearchBar>
           </span>
           <Button buttonText="ADD NEW"></Button>
         </div>
       ) : null}
-      {coursesList.map((course) => (
-        <CourseCard
-          course={course}
-          handleShowCourse={handleShowCourse}
-          authorsList={authorsList}
-        ></CourseCard>
-      ))}
+
+      {filteredList.length > 0 ? (
+        filteredList.map((course) => (
+          <CourseCard
+            course={course}
+            handleShowCourse={handleShowCourse}
+            authorsList={authorsList}
+          ></CourseCard>
+        ))
+      ) : (
+        <h2>No courses found for that search term. </h2>
+      )}
 
       {coursesList.length === 0 ? (
         <div className={styles.emptyList}>

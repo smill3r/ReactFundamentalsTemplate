@@ -36,7 +36,7 @@ function App() {
       <div className={styles.container}>
         {course == null ? (
           <Courses
-            courses={mockedCoursesList}
+            coursesList={mockedCoursesList}
             authorsList={mockedAuthorsList}
             handleShowCourse={setCourse}
           />
