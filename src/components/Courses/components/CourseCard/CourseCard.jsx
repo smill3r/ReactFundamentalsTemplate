@@ -34,9 +34,9 @@ import React from "react";
 
 import { getCourseDuration, formatCreationDate } from "../../../../helpers";
 
-import deleteIcon from "../../../../assets/deleteButtonIcon.svg";
+/* import deleteIcon from "../../../../assets/deleteButtonIcon.svg";
 import editIcon from "../../../../assets/editButtonIcon.svg";
-
+ */
 import { Button } from "../../../../common";
 
 import styles from "./styles.module.css";
@@ -46,7 +46,7 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
   const getAuthors = (courseAuthors) => {
     let authors = "";
     courseAuthors.forEach((author, index) => {
-      const authorName = authorsList.find((a) => a.id == author);
+      const authorName = authorsList.find((a) => a.id === author);
 
       if (authorName) {
         authors += `${authorName.name}`;
