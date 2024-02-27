@@ -37,29 +37,45 @@ import { getCourseDuration, formatCreationDate } from "../../../../helpers";
 import deleteIcon from "../../../../assets/deleteButtonIcon.svg";
 import editIcon from "../../../../assets/editButtonIcon.svg";
 
+import { Button } from "../../../../common";
+
 import styles from "./styles.module.css";
 
 export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
   // write your code here
+  const getAuthors = (courseAuthors) => {
+    let authors = "";
+    courseAuthors.forEach((author, index) => {
+      const authorName = authorsList.find((a) => a.id == author);
+
+      if (authorName) {
+        authors += `${authorName.name}`;
+        if (index < courseAuthors.length - 1) {
+          authors += ", ";
+        }
+      }
+    });
+    return authors;
+  };
 
   return (
     <div className={styles.cardContainer} data-testid="courseCard">
       <div className={styles.cardText}>
-        <h2>Title</h2>
-        <p>Description</p>
+        <h2>{course.title}</h2>
+        <p>{course.description}</p>
       </div>
       <div className={styles.cardDetails}>
         <p>
           <b>Authors: </b>
-          authors list
+          {getAuthors(course.authors)}
         </p>
         <p>
           <b>Duration:</b>
-          <span>duration</span>
+          <span>{getCourseDuration(course.duration)}</span>
         </p>
         <p>
           <b>Created: </b>
-          <span>date</span>
+          <span>{formatCreationDate(course.creationDate)}</span>
         </p>
         <div className={styles.buttonsContainer}>
           {/* 
@@ -69,6 +85,10 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
 				reuse Link component with editButtonIcon from 'src/assets' for 'Update' button with
 						data-testid="updateCourse" 
 			*/}
+          <Button
+            buttonText="SHOW CURSE"
+            handleClick={() => handleShowCourse(course.id)}
+          ></Button>
         </div>
       </div>
     </div>
