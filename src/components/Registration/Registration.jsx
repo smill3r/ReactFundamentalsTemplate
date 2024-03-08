@@ -16,6 +16,7 @@ import styles from "./styles.module.css";
 import { Input, Button } from "../../common";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { createUser } from "../../services";
 
 export const Registration = () => {
   // write your code here
@@ -25,31 +26,28 @@ export const Registration = () => {
     password: "",
   });
 
-  const [error, setError] = useState(false);
-
-  const [errorsList, setErrorsList] = useState([]);
+  const [isValid, setIsValid] = useState({
+    name: true,
+    email: true,
+    password: true,
+  });
 
   const navigate = useNavigate();
 
   const register = async (e) => {
     e.preventDefault();
-    setErrorsList([]);
+    setIsValid({
+      name: formData.name.length,
+      email: formData.email.length,
+      password: formData.password.length,
+    });
     if (Object.values(formData).some((p) => p === "")) {
       setError(true);
     } else {
-      if (error) setError(false);
-      const response = await fetch("http://localhost:4000/register", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const result = await response.json();
+      const result = await createUser(formData);
 
       if (result.successful) {
         navigate("/login", { replace: true });
-      } else {
-        setErrorsList(result.errors);
       }
     }
   };
@@ -62,13 +60,13 @@ export const Registration = () => {
           <Input
             placeholderText="Input name"
             labelText="Name"
-            error={error}
+            error={!isValid.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           ></Input>
           <Input
             placeholderText="Input email"
             labelText="Email"
-            error={error}
+            error={!isValid.email}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
@@ -76,7 +74,7 @@ export const Registration = () => {
           <Input
             placeholderText="Input password"
             labelText="Password"
-            error={error}
+            error={!isValid.password}
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
@@ -86,12 +84,6 @@ export const Registration = () => {
         <p>
           If you have an account you may&nbsp; <Link to="/login">Login</Link>
         </p>
-
-        <ul className={styles.errorsList}>
-          {errorsList.map((error) => (
-            <li>{error}</li>
-          ))}
-        </ul>
       </div>
     </div>
   );

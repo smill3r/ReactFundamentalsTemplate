@@ -21,6 +21,7 @@ import { useState } from "react";
 import styles from "./styles.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Input } from "../../common";
+import { login } from "../../services";
 
 export const Login = () => {
   // write your code here
@@ -32,13 +33,7 @@ export const Login = () => {
   const onLogin = async (e) => {
     e.preventDefault();
     if (formData.email && formData.password) {
-      const response = await fetch("http://localhost:4000/login", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const result = await response.json();
+      const result = await login(formData);
 
       if (result.successful) {
         localStorage.setItem("token", result.result);
@@ -69,6 +64,7 @@ export const Login = () => {
             placeholderText="Input password"
             labelText="Password"
             error={formError}
+            type="password"
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
@@ -76,8 +72,8 @@ export const Login = () => {
           <Button buttonText="LOGIN"></Button>
         </form>
         <p>
-          If you don't have an account you may&nbsp;{" "}
-          <Link to={"/registration"}>Register</Link>
+          If you don't have an account you can&nbsp;{" "}
+          <Link to={"/registration"}>Registration</Link>
         </p>
 
         {responseError ? <p style={{ color: "red" }}>{responseError}</p> : null}

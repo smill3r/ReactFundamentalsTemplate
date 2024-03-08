@@ -185,6 +185,7 @@ export const CourseForm = ({ authorsList, createCourse, createAuthor }) => {
             <h2>Authors</h2>
             <CreateAuthor
               onCreateAuthor={(author) => createNewAuthor(author)}
+              data-testid="addAuthor"
             ></CreateAuthor>
             <div className={styles.authorsContainer}>
               <h3>Authors List</h3>
@@ -221,6 +222,7 @@ export const CourseForm = ({ authorsList, createCourse, createAuthor }) => {
         ></Button>
         <Button
           buttonText="CREATE COURSE"
+          data-testid="createCourseButton"
           handleClick={createNewCourse}
         ></Button>
       </div>
