@@ -46,64 +46,184 @@
 
 // import React from "react";
 
-// import styles from "./styles.module.css";
+import styles from "./styles.module.css";
+import { Input, Button } from "../../common";
+import { useState } from "react";
+import { getCourseDuration } from "../../helpers";
+import { AuthorItem, CreateAuthor } from "./components";
+import { useNavigate } from "react-router-dom";
 
-// export const CourseForm = ({ authorsList, createCourse, createAuthor }) => {
-//   //write your code here
+export const CourseForm = ({ authorsList, createCourse, createAuthor }) => {
+  //write your code here
+  const [courseAuthors, setCourseAuthors] = useState([]);
+  const [valid, setValid] = useState({
+    title: true,
+    description: true,
+    duration: true,
+  });
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    duration: "",
+  });
+  const navigate = useNavigate();
 
-//   return (
-//     <div className={styles.container}>
+  const getId = () => {
+    return window.crypto.getRandomValues(new Uint8Array(10)).join("");
+  };
 
-//       <h2>// render title - Course edit or Create page</h2>
+  const getToday = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    let mm = today.getMonth() + 1; // Months start at 0!
+    let dd = today.getDate();
 
-//       <form>
+    if (dd < 10) dd = "0" + dd;
+    if (mm < 10) mm = "0" + mm;
 
-//         // reuse Input component for title field with data-testid="titleInput"
+    return dd + "/" + mm + "/" + yyyy;
+  };
 
-//         <label>
-//           Description
-//           <textarea
-//             className={styles.description}
-//             data-testid="descriptionTextArea"
-//           />
-//         </label>
+  const createNewCourse = () => {
+    const validObj = validate();
 
-//         <div className={styles.infoWrapper}>
-//           <div>
+    if (validObj.description && validObj.title && validObj.duration) {
+      const newCourse = {
+        ...formData,
+        authors: courseAuthors.map((author) => author.id),
+        id: getId(),
+        creationDate: getToday(),
+      };
+      console.log(newCourse);
+      createCourse(newCourse);
+      navigate("/courses");
+    }
+  };
 
-//             <div className={styles.duration}>
-//               // reuse Input component with data-testid='durationInput' for duration field
+  const validate = () => {
+    const validObj = {
+      title: formData.title.length > 1,
+      description: formData.description.length > 1,
+      duration: formData.duration > 0,
+    };
 
-//               <p>// render duration. use getCourseDuration helper</p>
-//             </div>
+    setValid(validObj);
 
-//             <h2>Authors</h2>
-//             // use CreateAuthor component
+    return validObj;
+  };
 
-//             <div className={styles.authorsContainer}>
-//               <h3>Authors List</h3>
+  const createNewAuthor = (authorName) => {
+    const author = {
+      name: authorName,
+      id: getId(),
+    };
 
-//               // use 'map' to display all available autors. Reuse 'AuthorItem' component for each author
-//             </div>
+    createAuthor(author);
+  };
 
-//           </div>
+  const removeCourseAuthor = (author) => {
+    setCourseAuthors(
+      courseAuthors.filter((courseAuthor) => courseAuthor.id !== author.id)
+    );
+  };
 
-//           <div className={styles.courseAuthorsContainer}>
-//             <h2>Course authors</h2>
-//             // use 'map' to display course autors. Reuse 'AuthorItem' component for each author
-//             <p className={styles.notification}>List is empty</p> // display this
-//             paragraph if there are no authors in the course
-//           </div>
+  const addCourseAuthor = (author) => {
+    if (!courseAuthors.map((a) => a.id).includes(author.id)) {
+      setCourseAuthors([...courseAuthors, author]);
+    }
+  };
 
-//         </div>
+  return (
+    <div className={styles.container}>
+      <h2>Course edit/Create page</h2>
 
-//       </form>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <Input
+          data-testid="titleInput"
+          labelText="Title"
+          placeholderText={"Please input title"}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          error={!valid.title}
+          customError="Title should be have at least two letters"
+        ></Input>
 
-//       <div className={styles.buttonsContainer}>
-//         // reuse Button component for 'CREATE/UPDATE COURSE' button with
-//         // reuse Button component for 'CANCEL' button with
-//       </div>
+        <label>
+          Description
+          <textarea
+            className={styles.description}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+            data-testid="descriptionTextArea"
+            style={{
+              border: !valid.duration ? "1px solid red" : "1px solid #cfcfcfad",
+            }}
+          />
+        </label>
 
-//     </div>
-//   );
-// };
+        {!valid.description && (
+          <span style={{ color: "red" }}>
+            Description should have at least two letters
+          </span>
+        )}
+
+        <div className={styles.infoWrapper}>
+          <div>
+            <div className={styles.duration}>
+              <Input
+                labelText="Duration"
+                data-testid="durationInput"
+                onChange={(e) =>
+                  setFormData({ ...formData, duration: e.target.value })
+                }
+                type="number"
+                error={!valid.duration}
+                customError="Duration should be at least 1 minute"
+              ></Input>
+              <p>{getCourseDuration(formData.duration)}</p>
+            </div>
+            <h2>Authors</h2>
+            <CreateAuthor
+              onCreateAuthor={(author) => createNewAuthor(author)}
+            ></CreateAuthor>
+            <div className={styles.authorsContainer}>
+              <h3>Authors List</h3>
+              {authorsList.map((author) => (
+                <AuthorItem
+                  key={author.id}
+                  author={author}
+                  addAuthor={(newAuthor) => addCourseAuthor(newAuthor)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.courseAuthorsContainer}>
+            <h2>Course authors</h2>
+            {courseAuthors.map((author) => (
+              <AuthorItem
+                key={author.id}
+                author={author}
+                removeAuthor={(author) => removeCourseAuthor(author)}
+              />
+            ))}
+            {courseAuthors.length ? null : (
+              <p className={styles.notification}>List is empty</p>
+            )}
+          </div>
+        </div>
+      </form>
+
+      <div className={styles.buttonsContainer}>
+        <Button
+          buttonText="CANCEL"
+          handleClick={() => navigate("/courses")}
+        ></Button>
+        <Button
+          buttonText="CREATE COURSE"
+          handleClick={createNewCourse}
+        ></Button>
+      </div>
+    </div>
+  );
+};

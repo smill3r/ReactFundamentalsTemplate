@@ -12,25 +12,87 @@
 //
 // import React from "react";
 
-// import styles from "./styles.module.css";
+import styles from "./styles.module.css";
+import { Input, Button } from "../../common";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-// export const Registration = () => {
-//   // write your code here
+export const Registration = () => {
+  // write your code here
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-//   return (
-//     <div className={styles.container}>
-//       <h1>Registration</h1>
-//       <div className={styles.formContainer}>
-//         <form onSubmit={handleSubmit}>
-//           // reuse Input component for email field
-//           // reuse Input component for name field
-//           // reuse Input component for password field
-//           // reuse Button component for 'Login' button
-//         </form>
-//         <p>
-//           If you have an account you may&nbsp; // use <Link /> component for navigation to Login page
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
+  const [error, setError] = useState(false);
+
+  const [errorsList, setErrorsList] = useState([]);
+
+  const navigate = useNavigate();
+
+  const register = async (e) => {
+    e.preventDefault();
+    setErrorsList([]);
+    if (Object.values(formData).some((p) => p === "")) {
+      setError(true);
+    } else {
+      if (error) setError(false);
+      const response = await fetch("http://localhost:4000/register", {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const result = await response.json();
+
+      if (result.successful) {
+        navigate("/login", { replace: true });
+      } else {
+        setErrorsList(result.errors);
+      }
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <h1>Registration</h1>
+      <div className={styles.formContainer}>
+        <form onSubmit={(e) => register(e)}>
+          <Input
+            placeholderText="Input name"
+            labelText="Name"
+            error={error}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          ></Input>
+          <Input
+            placeholderText="Input email"
+            labelText="Email"
+            error={error}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+          ></Input>
+          <Input
+            placeholderText="Input password"
+            labelText="Password"
+            error={error}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          ></Input>
+          <Button buttonText="REGISTER"></Button>
+        </form>
+        <p>
+          If you have an account you may&nbsp; <Link to="/login">Login</Link>
+        </p>
+
+        <ul className={styles.errorsList}>
+          {errorsList.map((error) => (
+            <li>{error}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};

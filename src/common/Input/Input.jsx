@@ -9,15 +9,30 @@ export const Input = ({
   placeholderText,
   labelText,
   onChange,
+  error,
   "data-testid": dataTestId,
+  type,
+  customError,
 }) => (
-  <label className={styles.label}>
-    {labelText}
+  <>
+    <label className={styles.label}>{labelText}</label>
     <input
       onChange={onChange}
       placeholder={placeholderText}
       className={styles.input}
       data-testid={dataTestId}
+      type={type}
+      style={{
+        border: error ? "1px solid red" : "1px solid #cfcfcfad",
+        marginBottom: error ? 0 : 20,
+      }}
     />
-  </label>
+    {error ? (
+      customError ? (
+        <label className={styles.error}>{customError}</label>
+      ) : (
+        <label className={styles.error}>{`${labelText} is required`}</label>
+      )
+    ) : null}
+  </>
 );

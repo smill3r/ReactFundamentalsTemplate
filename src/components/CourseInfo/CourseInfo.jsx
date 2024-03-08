@@ -27,21 +27,18 @@ import React from "react";
 import { formatCreationDate, getCourseDuration } from "../../helpers";
 import { Button } from "../../common";
 
+import { Link, useParams } from "react-router-dom";
+
 import styles from "./styles.module.css";
 
 // props description
 // * 'coursesList' - list of all courses. You need it to get chosen course from the list
 // * 'authorsList' - list of all authors. You need it to get authors' names for chosen course
 // * 'showCourseId' - id of chosen course. Use it to find needed course on the 'coursesList'.
-export const CourseInfo = ({
-  coursesList,
-  authorsList,
-  onBack,
-  showCourseId,
-}) => {
+export const CourseInfo = ({ coursesList, authorsList }) => {
   // write your code here
-  const course = coursesList.find((courses) => (courses.id = showCourseId));
-
+  const { courseId } = useParams();
+  const course = coursesList.find((courses) => courses.id === courseId);
   return (
     <>
       <div className={styles.container} data-testid="courseInfo">
@@ -54,7 +51,7 @@ export const CourseInfo = ({
           <div>
             <p>
               <b>ID: </b>
-              {showCourseId}
+              {course.id}
             </p>
             <p>
               <b>Duration: </b>
@@ -78,13 +75,12 @@ export const CourseInfo = ({
             </div>
           </div>
         </div>
-        {
-          // Module 2: use 'react-router-dom' 'Link' component for button 'Back' and remove 'onBack' prop
-        }
       </div>
 
       <div className={styles.backButton}>
-        <Button buttonText={"BACK"} handleClick={onBack}></Button>
+        <Link to={"/courses"}>
+          <Button buttonText={"BACK"}></Button>
+        </Link>
       </div>
     </>
   );

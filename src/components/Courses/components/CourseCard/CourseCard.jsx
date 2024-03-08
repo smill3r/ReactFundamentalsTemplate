@@ -40,8 +40,9 @@ import editIcon from "../../../../assets/editButtonIcon.svg";
 import { Button } from "../../../../common";
 
 import styles from "./styles.module.css";
+import { useNavigate } from "react-router-dom";
 
-export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
+export const CourseCard = ({ course, authorsList }) => {
   // write your code here
   const getAuthors = (courseAuthors) => {
     let authors = "";
@@ -57,6 +58,8 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
     });
     return authors;
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className={styles.cardContainer} data-testid="courseCard">
@@ -87,7 +90,7 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
 			*/}
           <Button
             buttonText="SHOW COURSE"
-            handleClick={() => handleShowCourse(course.id)}
+            handleClick={() => navigate(`/courses/${course.id}`)}
           ></Button>
         </div>
       </div>

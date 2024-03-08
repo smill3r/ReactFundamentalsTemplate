@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./styles.module.css";
 import { Button } from "../../common";
 import { Logo } from "./components";
+import { useNavigate } from "react-router-dom";
 
 // Module 1:
 // * add Logo and Button components
@@ -35,14 +36,25 @@ import { Logo } from "./components";
 
 export const Header = () => {
   // write your code here
+  const token = localStorage.getItem("token");
+  const userName = localStorage.getItem("userName");
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <div className={styles.headerContainer}>
       <Logo></Logo>
-      <div className={styles.userContainer}>
-        <p className={styles.userName}>Harry Potter</p>
-        <Button buttonText="LOGIN"></Button>
-      </div>
+      {token ? (
+        <div className={styles.userContainer}>
+          <p className={styles.userName}>{userName}</p>
+          <Button buttonText="LOGOUT" handleClick={logout}></Button>
+        </div>
+      ) : null}
     </div>
   );
 };

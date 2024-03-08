@@ -6,6 +6,8 @@ import { useState } from "react";
 
 import { SearchBar } from "../SearchBar";
 
+import { useNavigate } from "react-router-dom";
+
 // Module 1:
 // * render list of components using 'CourseCard' component for each course
 // * render 'ADD NEW COURSE' button (reuse Button component)
@@ -35,10 +37,11 @@ import { SearchBar } from "../SearchBar";
 //   ** Courses should display amount of CourseCard equal length of courses array.
 //   ** CourseForm should be shown after a click on the "Add new course" button.
 
-export const Courses = ({ coursesList, authorsList, handleShowCourse }) => {
+export const Courses = ({ coursesList, authorsList }) => {
   // write your code here
 
   const [filteredList, setCourseList] = useState(coursesList);
+  const navigate = useNavigate();
 
   // for EmptyCourseList component container use data-testid="emptyContainer" attribute
   // for button in EmptyCourseList component add data-testid="addCourse" attribute
@@ -53,15 +56,18 @@ export const Courses = ({ coursesList, authorsList, handleShowCourse }) => {
               filterUsers={setCourseList}
             ></SearchBar>
           </span>
-          <Button buttonText="ADD NEW"></Button>
+          <Button
+            buttonText="ADD NEW"
+            handleClick={() => navigate("/courses/add")}
+          ></Button>
         </div>
       ) : null}
 
       {filteredList.length > 0 ? (
         filteredList.map((course) => (
           <CourseCard
+            key={course.id}
             course={course}
-            handleShowCourse={handleShowCourse}
             authorsList={authorsList}
           ></CourseCard>
         ))
