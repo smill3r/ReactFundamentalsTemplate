@@ -36,13 +36,12 @@ export const Registration = () => {
 
   const register = async (e) => {
     e.preventDefault();
-    setIsValid({
-      name: formData.name.length,
-      email: formData.email.length,
-      password: formData.password.length,
-    });
     if (Object.values(formData).some((p) => p === "")) {
-      setError(true);
+      setIsValid({
+        name: formData.name.length,
+        email: formData.email.length,
+        password: formData.password.length,
+      });
     } else {
       const result = await createUser(formData);
 
