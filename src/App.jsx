@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Header,
   Courses,
@@ -9,7 +9,6 @@ import {
 } from "./components";
 
 import styles from "./App.module.css";
-import { mockedAuthorsList, mockedCoursesList } from "./constants";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { getAuthors, getCourses } from "./services";
 import { useDispatch } from "react-redux";
@@ -42,17 +41,16 @@ function App() {
   // write your code here
   const dispatch = useDispatch();
 
-  const fetchData = async () => {
-    const courses = await getCourses();
-    const authors = await getAuthors();
-
-    dispatch(setCourses(courses));
-    dispatch(setAuthors(authors));
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      const courses = await getCourses();
+      const authors = await getAuthors();
+
+      dispatch(setCourses(courses));
+      dispatch(setAuthors(authors));
+    };
     fetchData();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={styles.wrapper}>
