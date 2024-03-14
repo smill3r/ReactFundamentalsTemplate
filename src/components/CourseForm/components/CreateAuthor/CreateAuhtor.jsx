@@ -6,7 +6,7 @@ export const CreateAuthor = ({ onCreateAuthor }) => {
   // write your code here
   const [author, setAuthor] = useState();
   return (
-    <div className={styles.newAuthorContainer}>
+    <div className={styles.newAuthorContainer} data-testid="addAuthor">
       <Input
         data-testid="createAuthorInput"
         labelText="Author Name"

@@ -99,9 +99,10 @@ export const CourseCard = ({ course, authorsList }) => {
           ></Button>
           <Button
             buttonIcon={<DeleteIcon />}
+            data-testid="delete"
             handleClick={() => dispatch(deleteCourse(course.id))}
           ></Button>
-          <Button buttonIcon={<EditIcon />}></Button>
+          <Button buttonIcon={<EditIcon />} data-testid="updateCourse"></Button>
         </div>
       </div>
     </div>

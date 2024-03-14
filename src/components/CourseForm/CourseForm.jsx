@@ -190,7 +190,6 @@ export const CourseForm = () => {
             <h2>Authors</h2>
             <CreateAuthor
               onCreateAuthor={(author) => createNewAuthor(author)}
-              data-testid="addAuthor"
             ></CreateAuthor>
             <div className={styles.authorsContainer}>
               <h3>Authors List</h3>

@@ -81,9 +81,7 @@ export const CourseInfo = () => {
       </div>
 
       <div className={styles.backButton}>
-        <Link to={"/courses"}>
-          <Button buttonText={"BACK"}></Button>
-        </Link>
+        <Link to={"/courses"}>BACK</Link>
       </div>
     </>
   );

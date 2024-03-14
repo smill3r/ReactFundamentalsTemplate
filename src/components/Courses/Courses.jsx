@@ -2,7 +2,7 @@ import styles from "./styles.module.css";
 import { CourseCard } from "./components";
 import { Button } from "../../common";
 
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getAuthorsSelector, getCoursesSelector } from "../../store/selectors";
 
@@ -39,7 +39,6 @@ export const Courses = () => {
   // write your code here
   const coursesList = useSelector(getCoursesSelector);
   const authorsList = useSelector(getAuthorsSelector);
-  const navigate = useNavigate();
 
   // for EmptyCourseList component container use data-testid="emptyContainer" attribute
   // for button in EmptyCourseList component add data-testid="addCourse" attribute
@@ -47,10 +46,7 @@ export const Courses = () => {
   return (
     <>
       <div className={styles.panel}>
-        <Button
-          buttonText="ADD NEW"
-          handleClick={() => navigate("/courses/add")}
-        ></Button>
+        <Link to="/courses/add">ADD NEW</Link>
       </div>
 
       {coursesList.length > 0 ? (
@@ -67,6 +63,7 @@ export const Courses = () => {
           <p>Please use 'Add New Course' button to add your first course</p>
           <Button
             className={styles.marginButton}
+            data-testid="addCourse"
             buttonText="ADD NEW COURSE"
           ></Button>
         </div>
