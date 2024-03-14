@@ -9,6 +9,7 @@ import styles from "./styles.module.css";
 export const Button = ({
   buttonText,
   handleClick,
+  buttonIcon,
   "data-testid": dataTestId,
 }) => (
   <button
@@ -16,6 +17,6 @@ export const Button = ({
     onClick={handleClick}
     data-testid={dataTestId}
   >
-    {buttonText}
+    {buttonIcon ? buttonIcon : buttonText}
   </button>
 );

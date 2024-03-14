@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Header,
   Courses,
@@ -11,6 +11,10 @@ import {
 import styles from "./App.module.css";
 import { mockedAuthorsList, mockedCoursesList } from "./constants";
 import { Route, Routes, Navigate } from "react-router-dom";
+import { getAuthors, getCourses } from "./services";
+import { useDispatch } from "react-redux";
+import { setCourses } from "./store/slices/coursesSlice";
+import { setAuthors } from "./store/slices/authorsSlice";
 
 // Module 1:
 // * use mockedAuthorsList and mockedCoursesList mocked data
@@ -36,8 +40,19 @@ import { Route, Routes, Navigate } from "react-router-dom";
 
 function App() {
   // write your code here
-  const [courses, setCourses] = useState(mockedCoursesList);
-  const [authors, setAuthors] = useState(mockedAuthorsList);
+  const dispatch = useDispatch();
+
+  const fetchData = async () => {
+    const courses = await getCourses();
+    const authors = await getAuthors();
+
+    dispatch(setCourses(courses));
+    dispatch(setAuthors(authors));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className={styles.wrapper}>
@@ -48,30 +63,13 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route
             path="/courses/add"
-            element={
-              <CourseForm
-                authorsList={authors}
-                createCourse={(course) => setCourses([...courses, course])}
-                createAuthor={(author) => setAuthors([...authors, author])}
-              ></CourseForm>
-            }
+            element={<CourseForm></CourseForm>}
           ></Route>
           <Route
             path="/courses/:courseId"
-            element={
-              <CourseInfo
-                coursesList={courses}
-                authorsList={authors}
-                data-testid="courseInfo"
-              />
-            }
+            element={<CourseInfo data-testid="courseInfo" />}
           ></Route>
-          <Route
-            path="/courses"
-            element={
-              <Courses coursesList={courses} authorsList={authors}></Courses>
-            }
-          ></Route>
+          <Route path="/courses" element={<Courses></Courses>}></Route>
           <Route
             path="/"
             element={

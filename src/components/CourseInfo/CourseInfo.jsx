@@ -30,13 +30,16 @@ import { Button } from "../../common";
 import { Link, useParams } from "react-router-dom";
 
 import styles from "./styles.module.css";
+import { useSelector } from "react-redux";
 
 // props description
 // * 'coursesList' - list of all courses. You need it to get chosen course from the list
 // * 'authorsList' - list of all authors. You need it to get authors' names for chosen course
 // * 'showCourseId' - id of chosen course. Use it to find needed course on the 'coursesList'.
-export const CourseInfo = ({ coursesList, authorsList }) => {
+export const CourseInfo = () => {
   // write your code here
+  const coursesList = useSelector((state) => state.courses);
+  const authorsList = useSelector((state) => state.authors);
   const { courseId } = useParams();
   const course = coursesList.find((courses) => courses.id === courseId);
   return (

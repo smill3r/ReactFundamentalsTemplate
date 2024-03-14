@@ -22,9 +22,12 @@ import styles from "./styles.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Input } from "../../common";
 import { login } from "../../services";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../../store/slices/userSlice";
 
 export const Login = () => {
   // write your code here
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [formError, setFormError] = useState(false);
   const [responseError, setResponseError] = useState();
@@ -37,7 +40,14 @@ export const Login = () => {
 
       if (result.successful) {
         localStorage.setItem("token", result.result);
-        localStorage.setItem("userName", result?.user?.name);
+        dispatch(
+          setUserData({
+            isAuth: true,
+            name: result?.user?.name,
+            email: result?.user?.email,
+            token: result.result,
+          })
+        );
         navigate("/courses", { replace: true });
       } else {
         setResponseError(result.errors);

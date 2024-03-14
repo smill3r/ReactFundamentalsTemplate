@@ -6,8 +6,12 @@ export const authorsSlice = createSlice({
   name: "authors",
   initialState,
   reducers: {
-    // setAuthors:
-    // saveAuthor:
+    setAuthors: (state, action) => {
+      return action.payload;
+    },
+    saveAuthor: (state, action) => {
+      state.push(action.payload);
+    },
   },
 });
 

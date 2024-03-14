@@ -2,11 +2,9 @@ import styles from "./styles.module.css";
 import { CourseCard } from "./components";
 import { Button } from "../../common";
 
-import { useState } from "react";
-
-import { SearchBar } from "../SearchBar";
-
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getAuthorsSelector, getCoursesSelector } from "../../store/selectors";
 
 // Module 1:
 // * render list of components using 'CourseCard' component for each course
@@ -37,10 +35,10 @@ import { useNavigate } from "react-router-dom";
 //   ** Courses should display amount of CourseCard equal length of courses array.
 //   ** CourseForm should be shown after a click on the "Add new course" button.
 
-export const Courses = ({ coursesList, authorsList }) => {
+export const Courses = () => {
   // write your code here
-
-  const [filteredList, setCourseList] = useState(coursesList);
+  const coursesList = useSelector(getCoursesSelector);
+  const authorsList = useSelector(getAuthorsSelector);
   const navigate = useNavigate();
 
   // for EmptyCourseList component container use data-testid="emptyContainer" attribute
@@ -48,23 +46,15 @@ export const Courses = ({ coursesList, authorsList }) => {
 
   return (
     <>
-      {coursesList.length > 0 ? (
-        <div className={styles.panel}>
-          <span>
-            <SearchBar
-              coursesList={coursesList}
-              filterUsers={setCourseList}
-            ></SearchBar>
-          </span>
-          <Button
-            buttonText="ADD NEW"
-            handleClick={() => navigate("/courses/add")}
-          ></Button>
-        </div>
-      ) : null}
+      <div className={styles.panel}>
+        <Button
+          buttonText="ADD NEW"
+          handleClick={() => navigate("/courses/add")}
+        ></Button>
+      </div>
 
-      {filteredList.length > 0 ? (
-        filteredList.map((course) => (
+      {coursesList.length > 0 ? (
+        coursesList.map((course) => (
           <CourseCard
             key={course.id}
             course={course}
@@ -72,10 +62,6 @@ export const Courses = ({ coursesList, authorsList }) => {
           ></CourseCard>
         ))
       ) : (
-        <h2>No courses found for that search term. </h2>
-      )}
-
-      {coursesList.length === 0 ? (
         <div className={styles.emptyList}>
           <h1>Your List Is Empty</h1>
           <p>Please use 'Add New Course' button to add your first course</p>
@@ -84,7 +70,7 @@ export const Courses = ({ coursesList, authorsList }) => {
             buttonText="ADD NEW COURSE"
           ></Button>
         </div>
-      ) : null}
+      )}
     </>
   );
 };

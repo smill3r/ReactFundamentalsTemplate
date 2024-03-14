@@ -52,9 +52,15 @@ import { useState } from "react";
 import { getCourseDuration } from "../../helpers";
 import { AuthorItem, CreateAuthor } from "./components";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { saveCourse } from "../../store/slices/coursesSlice";
+import { saveAuthor } from "../../store/slices/authorsSlice";
+import { getAuthorsSelector } from "../../store/selectors";
 
-export const CourseForm = ({ authorsList, createCourse, createAuthor }) => {
+export const CourseForm = () => {
   //write your code here
+  const dispatch = useDispatch();
+  const authorsList = useSelector(getAuthorsSelector);
   const [courseAuthors, setCourseAuthors] = useState([]);
   const [valid, setValid] = useState({
     title: true,
@@ -94,8 +100,7 @@ export const CourseForm = ({ authorsList, createCourse, createAuthor }) => {
         id: getId(),
         creationDate: getToday(),
       };
-      console.log(newCourse);
-      createCourse(newCourse);
+      dispatch(saveCourse(newCourse));
       navigate("/courses");
     }
   };
@@ -118,7 +123,7 @@ export const CourseForm = ({ authorsList, createCourse, createAuthor }) => {
       id: getId(),
     };
 
-    createAuthor(author);
+    dispatch(saveAuthor(author));
   };
 
   const removeCourseAuthor = (author) => {

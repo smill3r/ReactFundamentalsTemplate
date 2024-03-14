@@ -41,9 +41,14 @@ import { Button } from "../../../../common";
 
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
+import { deleteCourse } from "../../../../store/slices/coursesSlice";
+import { useDispatch } from "react-redux";
+import { ReactComponent as EditIcon } from "../../../../assets/editButtonIcon.svg";
+import { ReactComponent as DeleteIcon } from "../../../../assets/deleteButtonIcon.svg";
 
 export const CourseCard = ({ course, authorsList }) => {
   // write your code here
+  const dispatch = useDispatch();
   const getAuthors = (courseAuthors) => {
     let authors = "";
     courseAuthors.forEach((author, index) => {
@@ -92,6 +97,11 @@ export const CourseCard = ({ course, authorsList }) => {
             buttonText="SHOW COURSE"
             handleClick={() => navigate(`/courses/${course.id}`)}
           ></Button>
+          <Button
+            buttonIcon={<DeleteIcon />}
+            handleClick={() => dispatch(deleteCourse(course.id))}
+          ></Button>
+          <Button buttonIcon={<EditIcon />}></Button>
         </div>
       </div>
     </div>

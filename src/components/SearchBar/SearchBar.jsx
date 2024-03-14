@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Input, Button } from "../../common";
 
-export const SearchBar = ({ filterUsers, coursesList }) => {
+export const SearchBar = ({ onFilterCourses, coursesList }) => {
   const [term, setTerm] = useState("");
 
   const onTextChange = (text) => {
     if (!text) {
-      filterUsers(coursesList);
+      onFilterCourses(coursesList);
     } else {
       setTerm(text);
     }
@@ -24,7 +24,7 @@ export const SearchBar = ({ filterUsers, coursesList }) => {
       }
     });
 
-    filterUsers(filteredList);
+    onFilterCourses(filteredList);
   };
 
   return (

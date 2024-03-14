@@ -29,10 +29,30 @@ export const login = async (data) => {
 
 export const getCourses = async () => {
   // write your code here
+  const response = await fetch("http://localhost:4000/courses/all", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).catch((err) => new Error(err));
+
+  const result = await response.json();
+
+  return result.result;
 };
 
 export const getAuthors = async () => {
-  // write your code here
+  // write your code hereconst
+  const response = await fetch("http://localhost:4000/authors/all", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).catch((err) => new Error(err));
+
+  const result = await response.json();
+
+  return result.result;
 };
 
 export const getCurrentUser = async () => {
