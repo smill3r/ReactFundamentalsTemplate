@@ -25,7 +25,6 @@
 import React from "react";
 
 import { formatCreationDate, getCourseDuration } from "../../helpers";
-import { Button } from "../../common";
 
 import { Link, useParams } from "react-router-dom";
 
