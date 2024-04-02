@@ -40,11 +40,14 @@ import editIcon from "../../../../assets/editButtonIcon.svg";
 import { Button } from "../../../../common";
 
 import styles from "./styles.module.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { deleteCourse } from "../../../../store/slices/coursesSlice";
-import { useDispatch } from "react-redux";
-import { ReactComponent as EditIcon } from "../../../../assets/editButtonIcon.svg";
+import { useDispatch, useSelector } from "react-redux";
 import { ReactComponent as DeleteIcon } from "../../../../assets/deleteButtonIcon.svg";
+import {
+  getUserRoleSelector,
+  getUserTokenSelector,
+} from "../../../../store/selectors";
 
 export const CourseCard = ({ course, authorsList }) => {
   // write your code here
@@ -65,6 +68,8 @@ export const CourseCard = ({ course, authorsList }) => {
   };
 
   const navigate = useNavigate();
+  const userRole = useSelector(getUserRoleSelector);
+  const userToken = useSelector(getUserTokenSelector);
 
   return (
     <div className={styles.cardContainer} data-testid="courseCard">
@@ -97,12 +102,25 @@ export const CourseCard = ({ course, authorsList }) => {
             buttonText="SHOW COURSE"
             handleClick={() => navigate(`/courses/${course.id}`)}
           ></Button>
-          <Button
-            buttonIcon={<DeleteIcon />}
-            data-testid="delete"
-            handleClick={() => dispatch(deleteCourse(course.id))}
-          ></Button>
-          <Button buttonIcon={<EditIcon />} data-testid="updateCourse"></Button>
+          {userRole === "admin" ? (
+            <>
+              <Button
+                buttonIcon={<DeleteIcon />}
+                data-testid="delete"
+                handleClick={() => dispatch(deleteCourse(course.id, userToken))}
+              ></Button>
+              <Link
+                to={`/courses/update/${course.id}`}
+                data-testid="updateCourse"
+              >
+                UPDATE
+              </Link>
+              {/*               <Button
+                buttonIcon={<EditIcon />}
+                data-testid="updateCourse"
+              ></Button> */}
+            </>
+          ) : null}
         </div>
       </div>
     </div>

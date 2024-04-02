@@ -1,10 +1,15 @@
 import styles from "./styles.module.css";
 import { CourseCard } from "./components";
-import { Button } from "../../common";
 
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getAuthorsSelector, getCoursesSelector } from "../../store/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAuthorsSelector,
+  getCoursesSelector,
+  getUserRoleSelector,
+} from "../../store/selectors";
+import { getUserThunk } from "../../store/thunks/userThunk";
+import { useEffect } from "react";
 
 // Module 1:
 // * render list of components using 'CourseCard' component for each course
@@ -37,17 +42,27 @@ import { getAuthorsSelector, getCoursesSelector } from "../../store/selectors";
 
 export const Courses = () => {
   // write your code here
+  const dispatch = useDispatch();
   const coursesList = useSelector(getCoursesSelector);
   const authorsList = useSelector(getAuthorsSelector);
+  const userRole = useSelector(getUserRoleSelector);
 
   // for EmptyCourseList component container use data-testid="emptyContainer" attribute
   // for button in EmptyCourseList component add data-testid="addCourse" attribute
+  useEffect(() => {
+    const userToken = localStorage.getItem("token");
+    if (userToken) {
+      dispatch(getUserThunk(userToken));
+    }
+  }, [dispatch]);
 
   return (
     <>
-      <div className={styles.panel}>
-        <Link to="/courses/add">ADD NEW</Link>
-      </div>
+      {userRole === "admin" ? (
+        <div className={styles.panel}>
+          <Link to="/courses/add">ADD NEW</Link>
+        </div>
+      ) : null}
 
       {coursesList.length > 0 ? (
         coursesList.map((course) => (
@@ -58,14 +73,21 @@ export const Courses = () => {
           ></CourseCard>
         ))
       ) : (
-        <div className={styles.emptyList}>
-          <h1>Your List Is Empty</h1>
-          <p>Please use 'Add New Course' button to add your first course</p>
-          <Button
-            className={styles.marginButton}
-            data-testid="addCourse"
-            buttonText="ADD NEW COURSE"
-          ></Button>
+        <div className={styles.emptyList} data-testid="emptyContainer">
+          {userRole === "admin" ? (
+            <>
+              <h1>Your List Is Empty</h1>
+              <p>Please use 'Add New Course' button to add your first course</p>
+              <Link to="/courses/add" data-testid="addCourse">
+                ADD NEW COURSE
+              </Link>
+            </>
+          ) : (
+            <p>
+              You don't have permissions to create a course. Please log in as
+              ADMIN
+            </p>
+          )}
         </div>
       )}
     </>

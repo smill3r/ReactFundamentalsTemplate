@@ -5,7 +5,7 @@ import { Button } from "../../common";
 import { Logo } from "./components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { removeUserData } from "../../store/slices/userSlice";
+import { logoutThunk } from "../../store/thunks/userThunk";
 
 // Module 1:
 // * add Logo and Button components
@@ -45,7 +45,7 @@ export const Header = () => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    dispatch(removeUserData());
+    dispatch(logoutThunk(userData.token));
     navigate("/");
   };
 

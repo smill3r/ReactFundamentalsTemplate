@@ -15,7 +15,14 @@ export const coursesSlice = createSlice({
     deleteCourse: (state, action) => {
       return state.filter((course) => course.id !== action.payload);
     },
-    //updateCourse:
+    updateCourse: (state, action) => {
+      return state.map((course) => {
+        if (course.id === action.payload.id) {
+          return action.payload;
+        }
+        return course;
+      });
+    },
   },
 });
 

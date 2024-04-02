@@ -13,6 +13,7 @@ export const Input = ({
   "data-testid": dataTestId,
   type,
   customError,
+  value,
 }) => (
   <>
     <label className={styles.label}>{labelText}</label>
@@ -21,6 +22,7 @@ export const Input = ({
       placeholder={placeholderText}
       className={styles.input}
       data-testid={dataTestId}
+      value={value}
       type={type}
       style={{
         border: error ? "1px solid red" : "1px solid #cfcfcfad",

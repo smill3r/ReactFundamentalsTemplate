@@ -6,15 +6,14 @@ import {
   Registration,
   Login,
   CourseForm,
+  PrivateRoute,
 } from "./components";
 
 import styles from "./App.module.css";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { getAuthors, getCourses } from "./services";
 import { useDispatch } from "react-redux";
-import { setCourses } from "./store/slices/coursesSlice";
-import { setAuthors } from "./store/slices/authorsSlice";
-
+import { getAuthorsThunk } from "./store/thunks/authorsThunk";
+import { getCoursesThunk } from "./store/thunks/coursesThunk";
 // Module 1:
 // * use mockedAuthorsList and mockedCoursesList mocked data
 // * add next components to the App component: Header, Courses and CourseInfo
@@ -42,14 +41,8 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const courses = await getCourses();
-      const authors = await getAuthors();
-
-      dispatch(setCourses(courses));
-      dispatch(setAuthors(authors));
-    };
-    fetchData();
+    dispatch(getAuthorsThunk());
+    dispatch(getCoursesThunk());
   }, [dispatch]);
 
   return (
@@ -61,7 +54,19 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route
             path="/courses/add"
-            element={<CourseForm></CourseForm>}
+            element={
+              <PrivateRoute>
+                <CourseForm></CourseForm>
+              </PrivateRoute>
+            }
+          ></Route>
+          <Route
+            path="/courses/update/:courseId"
+            element={
+              <PrivateRoute>
+                <CourseForm></CourseForm>
+              </PrivateRoute>
+            }
           ></Route>
           <Route
             path="/courses/:courseId"

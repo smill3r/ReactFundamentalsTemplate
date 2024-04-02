@@ -48,20 +48,56 @@
 
 import styles from "./styles.module.css";
 import { Input, Button } from "../../common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCourseDuration } from "../../helpers";
 import { AuthorItem, CreateAuthor } from "./components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveCourse } from "../../store/slices/coursesSlice";
-import { saveAuthor } from "../../store/slices/authorsSlice";
-import { getAuthorsSelector } from "../../store/selectors";
+import {
+  getAuthorsSelector,
+  getCourseByIdSelector,
+  getUserTokenSelector,
+} from "../../store/selectors";
+import {
+  createCourseThunk,
+  updateCourseThunk,
+} from "../../store/thunks/coursesThunk";
+import { createAuthorThunk } from "../../store/thunks/authorsThunk";
 
 export const CourseForm = () => {
   //write your code here
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { courseId } = useParams();
+  const courseInfo = useSelector((state) =>
+    getCourseByIdSelector(state, courseId)
+  );
+  const userToken = useSelector(getUserTokenSelector);
+
   const authorsList = useSelector(getAuthorsSelector);
   const [courseAuthors, setCourseAuthors] = useState([]);
+
+  useEffect(() => {
+    if (courseInfo) {
+      setFormData({
+        title: courseInfo.title,
+        description: courseInfo.description,
+        duration: courseInfo.duration,
+      });
+
+      console.log(courseInfo);
+
+      const currentCourseAuthors = authorsList.filter((author) =>
+        courseInfo.authors.includes(author.id)
+      );
+
+      console.log(currentCourseAuthors);
+
+      setCourseAuthors(currentCourseAuthors);
+    }
+  }, [courseInfo, authorsList]);
+
   const [valid, setValid] = useState({
     title: true,
     description: true,
@@ -72,23 +108,6 @@ export const CourseForm = () => {
     description: "",
     duration: "",
   });
-  const navigate = useNavigate();
-
-  const getId = () => {
-    return window.crypto.getRandomValues(new Uint8Array(10)).join("");
-  };
-
-  const getToday = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1; // Months start at 0!
-    let dd = today.getDate();
-
-    if (dd < 10) dd = "0" + dd;
-    if (mm < 10) mm = "0" + mm;
-
-    return dd + "/" + mm + "/" + yyyy;
-  };
 
   const createNewCourse = () => {
     const validObj = validate();
@@ -96,11 +115,26 @@ export const CourseForm = () => {
     if (validObj.description && validObj.title && validObj.duration) {
       const newCourse = {
         ...formData,
+        duration: parseInt(formData.duration),
         authors: courseAuthors.map((author) => author.id),
-        id: getId(),
-        creationDate: getToday(),
       };
-      dispatch(saveCourse(newCourse));
+      dispatch(createCourseThunk(newCourse, userToken));
+      navigate("/courses");
+    }
+  };
+
+  const updateCourse = () => {
+    const validObj = validate();
+
+    if (validObj.description && validObj.title && validObj.duration) {
+      const course = {
+        ...formData,
+        duration: parseInt(formData.duration),
+        authors: courseAuthors.map((author) => author.id),
+      };
+
+      console.log(userToken);
+      dispatch(updateCourseThunk(course, userToken, courseId));
       navigate("/courses");
     }
   };
@@ -120,10 +154,9 @@ export const CourseForm = () => {
   const createNewAuthor = (authorName) => {
     const author = {
       name: authorName,
-      id: getId(),
     };
 
-    dispatch(saveAuthor(author));
+    dispatch(createAuthorThunk(author, userToken));
   };
 
   const removeCourseAuthor = (author) => {
@@ -150,6 +183,7 @@ export const CourseForm = () => {
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           error={!valid.title}
           customError="Title should be have at least two letters"
+          value={formData.title}
         ></Input>
 
         <label>
@@ -163,6 +197,7 @@ export const CourseForm = () => {
             style={{
               border: !valid.duration ? "1px solid red" : "1px solid #cfcfcfad",
             }}
+            value={formData.description}
           />
         </label>
 
@@ -183,6 +218,7 @@ export const CourseForm = () => {
                 }
                 type="number"
                 error={!valid.duration}
+                value={formData.duration}
                 customError="Duration should be at least 1 minute"
               ></Input>
               <p>{getCourseDuration(formData.duration)}</p>
@@ -224,11 +260,19 @@ export const CourseForm = () => {
           buttonText="CANCEL"
           handleClick={() => navigate("/courses")}
         ></Button>
-        <Button
-          buttonText="CREATE COURSE"
-          data-testid="createCourseButton"
-          handleClick={createNewCourse}
-        ></Button>
+        {courseId ? (
+          <Button
+            buttonText="UPDATE"
+            data-testid="updateCourseButton"
+            handleClick={updateCourse}
+          ></Button>
+        ) : (
+          <Button
+            buttonText="CREATE COURSE"
+            data-testid="createCourseButton"
+            handleClick={createNewCourse}
+          ></Button>
+        )}
       </div>
     </div>
   );
