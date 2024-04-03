@@ -1,4 +1,4 @@
-import { findByAltText, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { Header } from "../Header";
 import { MockedWrapper, mockedUser } from "../../../testUtils";
 

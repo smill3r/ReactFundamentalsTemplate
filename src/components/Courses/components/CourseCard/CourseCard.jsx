@@ -48,7 +48,6 @@ import {
   getUserRoleSelector,
   getUserTokenSelector,
 } from "../../../../store/selectors";
-import { join } from "path";
 
 export const CourseCard = ({ course, authorsList }) => {
   // write your code here
@@ -61,6 +60,7 @@ export const CourseCard = ({ course, authorsList }) => {
         if (author) {
           return author.name;
         }
+        return null;
       })
       .join(", ");
   };
