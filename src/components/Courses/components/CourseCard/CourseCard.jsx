@@ -48,23 +48,21 @@ import {
   getUserRoleSelector,
   getUserTokenSelector,
 } from "../../../../store/selectors";
+import { join } from "path";
 
 export const CourseCard = ({ course, authorsList }) => {
   // write your code here
   const dispatch = useDispatch();
   const getAuthors = (courseAuthors) => {
-    let authors = "";
-    courseAuthors.forEach((author, index) => {
-      const authorName = authorsList.find((a) => a.id === author);
+    return courseAuthors
+      .map((authorId) => {
+        const author = authorsList.find((a) => a.id === authorId);
 
-      if (authorName) {
-        authors += `${authorName.name}`;
-        if (index < courseAuthors.length - 1) {
-          authors += ", ";
+        if (author) {
+          return author.name;
         }
-      }
-    });
-    return authors;
+      })
+      .join(", ");
   };
 
   const navigate = useNavigate();
@@ -80,11 +78,13 @@ export const CourseCard = ({ course, authorsList }) => {
       <div className={styles.cardDetails}>
         <p>
           <b>Authors: </b>
-          {getAuthors(course.authors)}
+          <span>{getAuthors(course.authors)}</span>
         </p>
         <p>
           <b>Duration:</b>
-          <span>{getCourseDuration(course.duration)}</span>
+          <span data-testid="duration">
+            {getCourseDuration(course.duration)}
+          </span>
         </p>
         <p>
           <b>Created: </b>
