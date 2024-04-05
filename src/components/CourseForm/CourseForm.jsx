@@ -86,13 +86,9 @@ export const CourseForm = () => {
         duration: courseInfo.duration,
       });
 
-      console.log(courseInfo);
-
       const currentCourseAuthors = authorsList.filter((author) =>
         courseInfo.authors.includes(author.id)
       );
-
-      console.log(currentCourseAuthors);
 
       setCourseAuthors(currentCourseAuthors);
     }
@@ -133,7 +129,6 @@ export const CourseForm = () => {
         authors: courseAuthors.map((author) => author.id),
       };
 
-      console.log(userToken);
       dispatch(updateCourseThunk(course, userToken, courseId));
       navigate("/courses");
     }
@@ -173,7 +168,7 @@ export const CourseForm = () => {
 
   return (
     <div className={styles.container}>
-      <h2>Course edit/Create page</h2>
+      <h2>{courseId ? `Course edit` : `Create course`}</h2>
 
       <form onSubmit={(e) => e.preventDefault()}>
         <Input
