@@ -68,7 +68,7 @@ export const CourseInfo = () => {
               <ul className={styles.authorsList}>
                 {authorsList.map((author) => {
                   if (course.authors.includes(author.id)) {
-                    return <li>{author.name}</li>;
+                    return <li key={author.id}>{author.name}</li>;
                   } else {
                     return null;
                   }

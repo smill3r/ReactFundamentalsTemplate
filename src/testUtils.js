@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { MemoryRouter as Router } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 const mockedState = {
   user: {
@@ -96,8 +96,8 @@ export const mockedStore = {
   dispatch: jest.fn(),
 };
 
-export const MockedWrapper = ({ children, store = mockedStore }) => (
-  <Provider store={store}>
-    <Router>{children}</Router>
+export const MockedWrapper = ({ children }) => (
+  <Provider store={mockedStore}>
+    <MemoryRouter>{children}</MemoryRouter>
   </Provider>
 );
