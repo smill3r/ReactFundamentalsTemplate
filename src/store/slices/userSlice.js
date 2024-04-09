@@ -19,7 +19,9 @@ export const userSlice = createSlice({
         isAuth: true,
       };
     },
-    removeUserData: (state, action) => initialState,
+    removeUserData: (state, action) => {
+      return { ...initialState, token: "" };
+    },
   },
 });
 
