@@ -3,7 +3,7 @@ import { saveAuthor, setAuthors } from "../slices/authorsSlice";
 
 export const createAuthorThunk = (newAuthor, token) => {
   return async (dispatch) => {
-    const author = createAuthor(newAuthor, token);
+    const author = await createAuthor(newAuthor, token);
     dispatch(saveAuthor(author));
   };
 };

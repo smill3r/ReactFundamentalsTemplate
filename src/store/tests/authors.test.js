@@ -1,8 +1,9 @@
 import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 import { authorsSlice, setAuthors, saveAuthor } from "../slices/authorsSlice";
-import { getAuthorsThunk } from "../thunks/authorsThunk";
-import { getAuthors } from "../../services";
+import { createAuthorThunk, getAuthorsThunk } from "../thunks/authorsThunk";
+import { createAuthor, getAuthors } from "../../services";
+import { mockedAuthors } from "../../testUtils";
 jest.mock("../../services");
 
 const middlewares = [thunk];
@@ -11,12 +12,22 @@ const mockStore = configureMockStore(middlewares);
 describe("getAuthorsThunk", () => {
   it("dispatch authors thunk", async () => {
     const store = mockStore({ authors: [] });
-    getAuthors.mockResolvedValueOnce([{ id: "1", name: "Author One" }]);
+    getAuthors.mockResolvedValueOnce([mockedAuthors[0]]);
 
     await store.dispatch(getAuthorsThunk());
 
     const actions = store.getActions();
-    expect(actions[0]).toEqual(setAuthors([{ id: "1", name: "Author One" }]));
+    expect(actions[0]).toEqual(setAuthors([mockedAuthors[0]]));
+  });
+
+  it("dispatch create authors thunk", async () => {
+    const store = mockStore({ authors: [] });
+    createAuthor.mockResolvedValueOnce(mockedAuthors[0]);
+
+    await store.dispatch(createAuthorThunk());
+
+    const actions = store.getActions();
+    expect(actions[0]).toEqual(saveAuthor(mockedAuthors[0]));
   });
 });
 
